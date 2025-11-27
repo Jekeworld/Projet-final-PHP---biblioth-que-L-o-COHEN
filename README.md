@@ -1,2 +1,3 @@
-# Projet-final-PHP---biblioth-que-L-o-COHEN
+# Projet-final-PHP---bibliotheque-Leo-COHEN
 Création d'un projet scolaire en PHP sur une bibliothèque avec un système de base de données.
+
