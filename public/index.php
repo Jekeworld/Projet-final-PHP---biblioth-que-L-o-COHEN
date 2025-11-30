@@ -1,20 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajout Utilisateur</title>
-</head>
-<body>
-    <h1>Connexion à la bibliothèque</h1>
-    <form method="post" action="">
-        <label for="user">Username :</label>
-        <input type="text" name="user" required>
-        <br><br>
-        <label for="mdp">Password :</label>
-        <input type="password" name="mdp" required>
-        <br><br>
-        <button type="submit">Connexion</button>
-    </form>
-</body>
-</html>
+<?php
+    session_start();
+
+    // Protéger l'accès (si pas connecté → retour au login)
+    if (!isset($_SESSION["connected"])) {
+        header("Location: login.php");
+        exit;
+    }
+
+    // Récupérer le controller et l'action
+    $controller = $_GET['controller'] ?? 'livre';
+    $action = $_GET['action'] ?? 'liste';
+
+    // Charger le contrôleur demandé
+    $controllerFile = "../controller/" . ucfirst($controller) . "Controller.php";
+
+    if (file_exists($controllerFile)) {
+        require_once $controllerFile;
+
+        $controllerClass = ucfirst($controller) . "Controller";
+
+        if (class_exists($controllerClass)) {
+            $ctrl = new $controllerClass();
+
+            if (method_exists($ctrl, $action)) {
+                $ctrl->$action();
+            } else {
+                echo "Action '$action' introuvable.";
+            }
+        } else {
+            echo "Contrôleur '$controllerClass' introuvable.";
+        }
+
+    } else {
+        echo "Fichier contrôleur '$controllerFile' introuvable.";
+    }
+?>
